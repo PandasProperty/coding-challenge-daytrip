@@ -1,7 +1,16 @@
 import React from "react";
 import "./PaymentValidation.css";
+import usePaymentValidation from "./usePaymentValidation";
 
 const PaymentValidation = () => {
+  const {
+    cardDetails,
+    onChange,
+    validateFields,
+  } = usePaymentValidation();
+
+  const invalidFieldsObj = validateFields();
+
   return (
     <div className="mt-30 layout-column justify-content-center align-items-center">
       <div className="card outlined" style={{ width: "650px" }}>
@@ -28,37 +37,80 @@ const PaymentValidation = () => {
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="layout-column mb-15">
                 <input
+                  type="text"
                   placeholder="Card Number"
                   data-testid="cardNumberInput"
+                  value={cardDetails.cardNumber}
+                  name="cardNumber"
+                  required
+                  onChange={onChange}
                 />
-                <p className="invalid-text" data-testid="numberInputError">
-                  Invalid Card Number
-                </p>
+                {invalidFieldsObj['cardNumber'] && (
+                  <p className="invalid-text" data-testid="numberInputError">
+                    Invalid Card Number
+                  </p>
+                )}
               </div>
               <div className="layout-column mb-15">
-                <input placeholder="Name On Card" data-testid="nameInput" />
-                <p className="invalid-text" data-testid="nameInputError">
-                  Invalid Card Name
-                </p>
+                <input
+                  type="text"
+                  placeholder="Name On Card"
+                  data-testid="nameInput"
+                  value={cardDetails.name}
+                  name="name"
+                  onChange={onChange}
+                />
+                {invalidFieldsObj['name'] && (
+                  <p className="invalid-text" data-testid="nameInputError">
+                    Invalid Card Name
+                  </p>
+                )}
               </div>
               <div className="flex justify-content-around align-items-center">
                 <div className="layout-column mb-30">
-                  <input placeholder="Expiry Month" data-testid="monthInput" />
-                  <p className="invalid-text" data-testid="monthInputError">
-                    Invalid Month
-                  </p>
+                  <input
+                    type="number"
+                    placeholder="Expiry Month"
+                    data-testid="monthInput"
+                    input={cardDetails.month}
+                    name="month"
+                    onChange={onChange}
+                  />
+                  {invalidFieldsObj['month'] && (
+                    <p className="invalid-text" data-testid="monthInputError">
+                      Invalid Month
+                    </p>
+                  )}
                 </div>
                 <div className="layout-column mb-30">
-                  <input placeholder="Expiry Year" data-testid="yearInput" />
-                  <p className="invalid-text" data-testid="yearInputError">
-                    Invalid Year
-                  </p>
+                  <input
+                    type="number"
+                    placeholder="Expiry Year"
+                    data-testid="yearInput"
+                    input={cardDetails.year}
+                    name="year"
+                    onChange={onChange}
+                  />
+                  {invalidFieldsObj['year'] && (
+                    <p className="invalid-text" data-testid="yearInputError">
+                      Invalid Year
+                    </p>
+                  )}
                 </div>
                 <div className="layout-column mb-30">
-                  <input placeholder="CVV" data-testid="cvvInput" />
-                  <p className="invalid-text" data-testid="cvvInputError">
-                    Invalid CVV
-                  </p>
+                  <input
+                    type="number"
+                    placeholder="CVV"
+                    data-testid="cvvInput"
+                    input={cardDetails.cvv}
+                    name="cvv"
+                    onChange={onChange}
+                  />
+                  {invalidFieldsObj['cvv'] && (
+                    <p className="invalid-text" data-testid="cvvInputError">
+                      Invalid CVV
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="layout-column mb-30">
@@ -66,7 +118,7 @@ const PaymentValidation = () => {
                   type="submit"
                   className="mx-0"
                   data-testid="submitButton"
-                  disabled={false}
+                  disabled={!!Object.keys(invalidFieldsObj).length}
                 >
                   Submit
                 </button>
